@@ -21,6 +21,7 @@ from .respond import respond
 from .server import server
 from .utils.telemetry import send_telemetry
 from .utils.truncate_output import truncate_output
+from .utils.lazy_loader import LazyLoader
 
 
 class OpenInterpreter:
@@ -331,3 +332,8 @@ class OpenInterpreter:
     def get_oi_dir(self):
         # Again, just handy for start_script in profiles.
         return oi_dir
+
+
+@LazyLoader
+def interpreter():
+    return OpenInterpreter()

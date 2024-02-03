@@ -4,7 +4,7 @@ import time
 
 import pkg_resources
 
-from ..core.core import OpenInterpreter
+from ..core.core import interpreter
 from .conversation_navigator import conversation_navigator
 from .profiles.profiles import open_profile_dir, profile, reset_profile
 from .utils.check_for_update import check_for_update
@@ -30,42 +30,42 @@ def start_terminal_interface(interpreter):
             "nickname": "ci",
             "help_text": "custom instructions for the language model. will be appended to the system_message",
             "type": str,
-            "attribute": {"object": interpreter, "attr_name": "custom_instructions"},
+            "attribute": {"object": interpreter.get(), "attr_name": "custom_instructions"},
         },
         {
             "name": "system_message",
             "nickname": "s",
             "help_text": "(we don't recommend changing this) base prompt for the language model",
             "type": str,
-            "attribute": {"object": interpreter, "attr_name": "system_message"},
+            "attribute": {"object": interpreter.get(), "attr_name": "system_message"},
         },
         {
             "name": "auto_run",
             "nickname": "y",
             "help_text": "automatically run generated code",
             "type": bool,
-            "attribute": {"object": interpreter, "attr_name": "auto_run"},
+            "attribute": {"object": interpreter.get(), "attr_name": "auto_run"},
         },
         {
             "name": "verbose",
             "nickname": "v",
             "help_text": "print detailed logs",
             "type": bool,
-            "attribute": {"object": interpreter, "attr_name": "verbose"},
+            "attribute": {"object": interpreter.get(), "attr_name": "verbose"},
         },
         {
             "name": "model",
             "nickname": "m",
             "help_text": "language model to use",
             "type": str,
-            "attribute": {"object": interpreter.llm, "attr_name": "model"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "model"},
         },
         {
             "name": "temperature",
             "nickname": "t",
             "help_text": "optional temperature setting for the language model",
             "type": float,
-            "attribute": {"object": interpreter.llm, "attr_name": "temperature"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "temperature"},
         },
         {
             "name": "llm_supports_vision",
@@ -73,7 +73,7 @@ def start_terminal_interface(interpreter):
             "help_text": "inform OI that your model supports vision, and can recieve vision inputs",
             "type": bool,
             "action": argparse.BooleanOptionalAction,
-            "attribute": {"object": interpreter.llm, "attr_name": "supports_vision"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "supports_vision"},
         },
         {
             "name": "llm_supports_functions",
@@ -81,63 +81,63 @@ def start_terminal_interface(interpreter):
             "help_text": "inform OI that your model supports OpenAI-style functions, and can make function calls",
             "type": bool,
             "action": argparse.BooleanOptionalAction,
-            "attribute": {"object": interpreter.llm, "attr_name": "supports_functions"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "supports_functions"},
         },
         {
             "name": "context_window",
             "nickname": "cw",
             "help_text": "optional context window size for the language model",
             "type": int,
-            "attribute": {"object": interpreter.llm, "attr_name": "context_window"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "context_window"},
         },
         {
             "name": "max_tokens",
             "nickname": "x",
             "help_text": "optional maximum number of tokens for the language model",
             "type": int,
-            "attribute": {"object": interpreter.llm, "attr_name": "max_tokens"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "max_tokens"},
         },
         {
             "name": "max_budget",
             "nickname": "b",
             "help_text": "optionally set the max budget (in USD) for your llm calls",
             "type": float,
-            "attribute": {"object": interpreter.llm, "attr_name": "max_budget"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "max_budget"},
         },
         {
             "name": "api_base",
             "nickname": "ab",
             "help_text": "optionally set the API base URL for your llm calls (this will override environment variables)",
             "type": str,
-            "attribute": {"object": interpreter.llm, "attr_name": "api_base"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "api_base"},
         },
         {
             "name": "api_key",
             "nickname": "ak",
             "help_text": "optionally set the API key for your llm calls (this will override environment variables)",
             "type": str,
-            "attribute": {"object": interpreter.llm, "attr_name": "api_key"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "api_key"},
         },
         {
             "name": "api_version",
             "nickname": "av",
             "help_text": "optionally set the API version for your llm calls (this will override environment variables)",
             "type": str,
-            "attribute": {"object": interpreter.llm, "attr_name": "api_version"},
+            "attribute": {"object": interpreter.get().llm, "attr_name": "api_version"},
         },
         {
             "name": "max_output",
             "nickname": "xo",
             "help_text": "optional maximum number of characters for code outputs",
             "type": int,
-            "attribute": {"object": interpreter, "attr_name": "max_output"},
+            "attribute": {"object": interpreter.get(), "attr_name": "max_output"},
         },
         {
             "name": "force_task_completion",
             "nickname": "fc",
             "help_text": "runs OI in a loop, requiring it to admit to completing/failing task",
             "type": bool,
-            "attribute": {"object": interpreter, "attr_name": "force_task_completion"},
+            "attribute": {"object": interpreter.get(), "attr_name": "force_task_completion"},
         },
         {
             "name": "disable_telemetry",
@@ -146,21 +146,21 @@ def start_terminal_interface(interpreter):
             "type": bool,
             "default": True,
             "action": "store_false",
-            "attribute": {"object": interpreter, "attr_name": "anonymous_telemetry"},
+            "attribute": {"object": interpreter.get(), "attr_name": "anonymous_telemetry"},
         },
         {
             "name": "offline",
             "nickname": "o",
             "help_text": "turns off all online features (except the language model, if it's hosted)",
             "type": bool,
-            "attribute": {"object": interpreter, "attr_name": "offline"},
+            "attribute": {"object": interpreter.get(), "attr_name": "offline"},
         },
         {
             "name": "speak_messages",
             "nickname": "sm",
             "help_text": "(Mac only, experimental) use the applescript `say` command to read messages aloud",
             "type": bool,
-            "attribute": {"object": interpreter, "attr_name": "speak_messages"},
+            "attribute": {"object": interpreter.get(), "attr_name": "speak_messages"},
         },
         {
             "name": "safe_mode",
@@ -169,7 +169,7 @@ def start_terminal_interface(interpreter):
             "type": str,
             "choices": ["off", "ask", "auto"],
             "default": "off",
-            "attribute": {"object": interpreter, "attr_name": "safe_mode"},
+            "attribute": {"object": interpreter.get(), "attr_name": "safe_mode"},
         },
         {
             "name": "fast",
@@ -304,10 +304,10 @@ def start_terminal_interface(interpreter):
         return
 
     # if safe_mode and auto_run are enabled, safe_mode disables auto_run
-    if interpreter.auto_run and (
-        interpreter.safe_mode == "ask" or interpreter.safe_mode == "auto"
+    if interpreter.get().auto_run and (
+            interpreter.get().safe_mode == "ask" or interpreter.get().safe_mode == "auto"
     ):
-        setattr(interpreter, "auto_run", False)
+        setattr(interpreter.get(), "auto_run", False)
 
     if args.fast:
         args.profile = "fast.yaml"
@@ -327,7 +327,7 @@ def start_terminal_interface(interpreter):
 
     ### Apply profile
 
-    interpreter = profile(interpreter, args.profile)
+    interpreter = profile(interpreter.get(), args.profile)
 
     ### Set attributes on interpreter, because the arguments passed in via the CLI should override profile
 
@@ -407,7 +407,6 @@ def set_attributes(args, arguments):
 
 
 def main():
-    interpreter = OpenInterpreter()
     try:
         start_terminal_interface(interpreter)
     except KeyboardInterrupt:
