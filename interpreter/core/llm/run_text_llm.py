@@ -16,7 +16,7 @@ def run_text_llm(llm, params):
     accumulated_block = ""
     language = None
 
-    for chunk in llm.completions(**params):
+    for chunk in llm.completions.get()(**params):
         if llm.interpreter.verbose:
             print("Chunk in coding_llm", chunk)
 

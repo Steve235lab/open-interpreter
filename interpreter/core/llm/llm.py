@@ -7,6 +7,7 @@ from ...terminal_interface.utils.display_markdown_message import (
 from .run_function_calling_llm import run_function_calling_llm
 from .run_text_llm import run_text_llm
 from .utils.convert_to_openai_messages import convert_to_openai_messages
+from ...core.utils.lazy_loader import LazyLoader
 
 litellm.suppress_debug_info = True
 
@@ -195,6 +196,7 @@ Continuing...
             yield from run_text_llm(self, params)
 
 
+@LazyLoader
 def fixed_litellm_completions(**params):
     """
     Just uses a dummy API key, since we use litellm without an API key sometimes.

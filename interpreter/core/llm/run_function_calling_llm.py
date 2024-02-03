@@ -41,7 +41,7 @@ def run_function_calling_llm(llm, request_params):
     language = None
     code = ""
 
-    for chunk in llm.completions(**request_params):
+    for chunk in llm.completions.get()(**request_params):
         if "choices" not in chunk or len(chunk["choices"]) == 0:
             # This happens sometimes
             continue
