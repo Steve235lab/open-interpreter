@@ -30,9 +30,9 @@ matplotlib = "^3.8.2"
 toml = "^0.10.2"
 posthog = "^3.1.0"
 tiktoken = "^0.5.2"
+opencv-python = ">=4.8.1.78,<4.9.0"  # New versions can't run on some old macOS like macOS 11.7
 
 #Optional dependencies
-opencv-python = { version = "^4.8.1.78", optional = true }
 pyautogui = { version = "^0.9.54", optional = true }
 plyer = { version = "^2.1.0", optional = true }
 pywinctl = { version = "^0.3", optional = true }
