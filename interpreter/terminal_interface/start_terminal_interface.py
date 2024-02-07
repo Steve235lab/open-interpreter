@@ -2,13 +2,11 @@ import argparse
 import sys
 import time
 
-import pkg_resources
-
-from ..core.core import OpenInterpreter
 from .conversation_navigator import conversation_navigator
-from .profiles.profiles import open_profile_dir, profile, reset_profile
+from .profiles.profiles import profile
 from .utils.check_for_update import check_for_update
 from .utils.display_markdown_message import display_markdown_message
+from .utils.arguments_short_cut import arguments_shortcut
 from .validate_llm_settings import validate_llm_settings
 
 
@@ -197,14 +195,6 @@ def start_terminal_interface(interpreter):
         },
         # Special commands
         {
-            "name": "reset_profile",
-            "help_text": "reset a profile file. run `--reset_profile` without an argument to reset all default profiles",
-            "type": str,
-            "default": "NOT_PROVIDED",
-            "nargs": "?",  # This means you can pass in nothing if you want
-        },
-        {"name": "profiles", "help_text": "opens profiles directory", "type": bool},
-        {
             "name": "conversations",
             "help_text": "list conversations to resume",
             "type": bool,
@@ -212,11 +202,6 @@ def start_terminal_interface(interpreter):
         {
             "name": "server",
             "help_text": "start open interpreter as a server",
-            "type": bool,
-        },
-        {
-            "name": "version",
-            "help_text": "get Open Interpreter's version number",
             "type": bool,
         },
     ]
@@ -286,22 +271,6 @@ def start_terminal_interface(interpreter):
                 )
 
     args = parser.parse_args()
-
-    if args.profiles:
-        open_profile_dir()
-        return
-
-    if args.reset_profile != "NOT_PROVIDED":
-        reset_profile(
-            args.reset_profile
-        )  # This will be None if they just ran `--reset_profile`
-        return
-
-    if args.version:
-        version = pkg_resources.get_distribution("open-interpreter").version
-        update_name = "New Computer Update"  # Change this with each major update
-        print(f"Open Interpreter {version} {update_name}")
-        return
 
     # if safe_mode and auto_run are enabled, safe_mode disables auto_run
     if interpreter.auto_run and (
@@ -407,7 +376,9 @@ def set_attributes(args, arguments):
 
 
 def main():
-    interpreter = OpenInterpreter()
+    interpreter = arguments_shortcut()
+    if not interpreter:
+        return
     try:
         start_terminal_interface(interpreter)
     except KeyboardInterrupt:
