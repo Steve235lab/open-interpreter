@@ -193,6 +193,8 @@ Continuing...
             params["max_tokens"] = self.max_tokens
         if self.temperature:
             params["temperature"] = self.temperature
+        if self.model.startswith("moonshot"):
+            params['custom_llm_provider'] = "moonshot"
 
         # Set some params directly on LiteLLM
         if self.max_budget:
@@ -203,6 +205,7 @@ Continuing...
         if supports_functions:
             yield from run_function_calling_llm(self, params)
         else:
+            print(f"===== params: {params} ======")
             yield from run_text_llm(self, params)
 
 

@@ -405,6 +405,7 @@ def start_terminal_interface(interpreter):
             and not interpreter.llm.model.lower().startswith("ollama")
             and not interpreter.llm.model.lower().startswith("jan")
             and not interpreter.llm.model.lower().startswith("local")
+            and not interpreter.llm.model.lower().startswith("moonshot/")   # AKA Kimi
         ):
             interpreter.llm.model = "openai/" + interpreter.llm.model
         elif interpreter.llm.model.lower().startswith("jan/"):
