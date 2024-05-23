@@ -265,6 +265,12 @@ def start_terminal_interface(interpreter):
                 "attr_name": "contribute_conversation",
             },
         },
+        {
+            "name": "no_live_response",
+            "help_text": "perform a one-time rendering after the whole response was finished instead of live rending while receiving response chunks",
+            "type": bool,
+            "attribute": {"object": interpreter, "attr_name": "no_live_response"},
+        },
     ]
 
     # Check for deprecated flags before parsing arguments

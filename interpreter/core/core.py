@@ -85,6 +85,7 @@ class OpenInterpreter:
         import_skills=False,
         multi_line=False,
         contribute_conversation=False,
+        no_live_response=False,
     ):
         # State
         self.messages = [] if messages is None else messages
@@ -103,6 +104,7 @@ class OpenInterpreter:
         self.in_terminal_interface = in_terminal_interface
         self.multi_line = multi_line
         self.contribute_conversation = contribute_conversation
+        self.no_live_response = no_live_response
 
         # Loop messages
         self.loop = loop
